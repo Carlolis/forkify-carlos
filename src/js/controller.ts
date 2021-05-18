@@ -101,5 +101,6 @@ const init = function () {
   searchView.addHandleSearch(controlSearchResults);
   paginationView.addHandlePagination(controlPagination);
   console.log('Coucou');
+  console.log('NEx feature Coucouc');
 };
 init();
