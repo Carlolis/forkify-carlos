@@ -134,7 +134,6 @@ class State {
     const storage = localStorage.getItem('bookmarks');
 
     if (storage) this.bookmarks = JSON.parse(storage);
-    console.log(this.bookmarks);
   };
 }
 
