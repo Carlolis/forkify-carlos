@@ -100,6 +100,5 @@ const init = function () {
   recipeView.addHandlerAddBookmark(controlBookmark);
   searchView.addHandleSearch(controlSearchResults);
   paginationView.addHandlePagination(controlPagination);
-  console.log('Coucou');
 };
 init();
