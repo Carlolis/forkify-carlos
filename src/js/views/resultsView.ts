@@ -1,6 +1,6 @@
 import View from './View';
 import Recipe from '../Recipe';
-
+import icons from '../../img/icons.svg';
 class ResultsView extends View {
   protected static instance: ResultsView;
   protected parentElement = document.querySelector('.results') as HTMLElement;
@@ -32,7 +32,12 @@ class ResultsView extends View {
         <div class="preview__data">
           <h4 class="preview__title">${elt.title}</h4>
           <p class="preview__publisher">${elt.publisher}</p>  
-        </div>  
+        </div> 
+        <div class="preview__user-generated ${elt.key ? '' : 'hidden'}">
+        <svg>
+          <use href="${icons}#icon-user"></use>
+        </svg>
+        </div> 
       </a>
     </li>`;
       })

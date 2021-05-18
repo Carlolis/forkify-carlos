@@ -12,7 +12,7 @@ export default abstract class View {
   public static getInstance(): void | View {}
   protected abstract generateMarkup(): string;
 
-  public render(data: any, render = true) {
+  public render(data: Object | Object[], render: boolean = true) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
 

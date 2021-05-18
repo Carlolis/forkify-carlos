@@ -1,4 +1,5 @@
 //TODO to implement
+import icons from '../../img/icons.svg';
 import View from './View';
 import Recipe from '../Recipe';
 
@@ -6,7 +7,7 @@ class PreviewView extends View {
   generateMarkup() {
     const id = window.location.hash.slice(1);
     let data = this.data as Recipe[];
-
+    console.log(data[0].key);
     return data
       .map((elt: Recipe) => {
         return `<li class="preview">
@@ -19,7 +20,13 @@ class PreviewView extends View {
         <div class="preview__data">
           <h4 class="preview__title">${elt.title}</h4>
           <p class="preview__publisher">${elt.publisher}</p>  
-        </div>  
+          <div class="preview__user-generated ${elt.key ? '' : 'hidden'}">
+          <svg>
+            <use href="${icons}#icon-user"></use>
+          </svg>
+          </div> 
+        </div> 
+     
       </a>
     </li>`;
       })

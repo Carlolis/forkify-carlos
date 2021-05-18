@@ -1,8 +1,13 @@
 import { plainToClass } from 'class-transformer';
-import { API_Url, RESULTS_PER_PAGE } from './config';
-import { getJSON } from './helpers';
+import { API_Url, RESULTS_PER_PAGE, KEY } from './config';
+import { AJAX } from './helpers';
 import Recipe from './Recipe';
-
+import { sentRecipe } from './Recipe';
+/**
+ *
+ *
+ * @author Charles Ilieff
+ */
 class State {
   protected static instance: State;
   private recipe: Recipe;
@@ -12,6 +17,7 @@ class State {
     resultsPerPage: number;
     page: number;
   };
+  private key: string;
   private bookmarks: Recipe[];
   private constructor() {
     this.search = {
@@ -82,7 +88,7 @@ class State {
 
   public loadRecipe = async function (id: string) {
     try {
-      const data = await getJSON(`${API_Url}/${id}`);
+      const data = await AJAX(`${API_Url}/${id}?key=${KEY}`);
 
       const recipeJson = data.data.recipe;
 
@@ -99,7 +105,7 @@ class State {
   };
   public loadSearchResults = async function (query: string) {
     try {
-      const { data } = await getJSON(`${API_Url}?search=${query}`);
+      const { data } = await AJAX(`${API_Url}?search=${query}&key=${KEY}`);
 
       this.setSearch(plainToClass(Recipe, data.recipes as Object[]), query);
     } catch (err) {
@@ -135,6 +141,46 @@ class State {
 
     if (storage) this.bookmarks = JSON.parse(storage);
   };
+  public uploadRecipe = async function (newRecipe: any) {
+    try {
+      const ingredients = Object.entries<string>(newRecipe)
+        .filter(entry => {
+          return entry[0].startsWith('ingredient') && entry[1] !== '';
+        })
+        .map(ing => {
+          const ingArr = ing[1].split(',').map(elm => elm.trim());
+          if (ingArr.length !== 3)
+            throw new Error(
+              'Wrong ingredient format ! Please use the correct format:)'
+            );
+
+          const [quantity, unit, description] = ingArr;
+
+          return { quantity: quantity ? +quantity : null, unit, description };
+        });
+      console.log(newRecipe);
+      const recipe: sentRecipe = {
+        title: newRecipe.title,
+        source_url: newRecipe.sourceUrl,
+        image_url: newRecipe.image,
+        publisher: newRecipe.publisher,
+        cooking_time: +newRecipe.cookingTime,
+        servings: +newRecipe.servings,
+        ingredients,
+      };
+
+      const { data } = await AJAX(`${API_Url}?key=${KEY}`, recipe);
+      console.log(data.recipe);
+      this.setRecipe(plainToClass(Recipe, data.recipe as Recipe));
+      this.createKey(KEY);
+      this.addBookmark(this.recipe);
+    } catch (err) {
+      throw err;
+    }
+  };
+  private createKey(key: string) {
+    this.key = key;
+  }
 }
 
 export default State.getInstance();

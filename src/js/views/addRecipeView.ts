@@ -2,7 +2,7 @@ import View from './View';
 import icons from '../../img/icons.svg';
 class AddRecipeView extends View {
   private static instance: AddRecipeView;
-
+  protected message = 'Recipe was successfully uploaded !';
   private window = document.querySelector('.add-recipe-window');
   private overlay = document.querySelector('.overlay');
   private btnOpen = document.querySelector('.nav__btn--add-recipe');
@@ -26,14 +26,16 @@ class AddRecipeView extends View {
     return AddRecipeView.instance;
   }
 
+  public toggleWindow() {
+    this.overlay.classList.toggle('hidden');
+    this.window.classList.toggle('hidden');
+  }
   private addHandlerWindow() {
     this.btnOpen.addEventListener('click', () => {
-      this.overlay.classList.toggle('hidden');
-      this.window.classList.toggle('hidden');
+      this.toggleWindow();
     });
     this.btnClose.addEventListener('click', () => {
-      this.overlay.classList.toggle('hidden');
-      this.window.classList.toggle('hidden');
+      this.toggleWindow();
     });
   }
 
